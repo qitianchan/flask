@@ -1,5 +1,3 @@
-.. _blueprints:
-
 Modular Applications with Blueprints
 ====================================
 
@@ -37,8 +35,9 @@ Blueprints in Flask are intended for these cases:
 A blueprint in Flask is not a pluggable app because it is not actually an
 application -- it's a set of operations which can be registered on an
 application, even multiple times.  Why not have multiple application
-objects?  You can do that (see :ref:`app-dispatch`), but your applications
-will have separate configs and will be managed at the WSGI layer.
+objects?  You can do that (see :doc:`/patterns/appdispatch`), but your
+applications will have separate configs and will be managed at the WSGI
+layer.
 
 Blueprints instead provide separation at the Flask level, share
 application config, and can change an application object as necessary with
@@ -70,7 +69,7 @@ implement a blueprint that does simple rendering of static templates::
     @simple_page.route('/<page>')
     def show(page):
         try:
-            return render_template('pages/%s.html' % page)
+            return render_template(f'pages/{page}.html')
         except TemplateNotFound:
             abort(404)
 
@@ -246,7 +245,7 @@ was dispatched to any other admin blueprint endpoint.
 Error Handlers
 --------------
 
-Blueprints support the errorhandler decorator just like the :class:`Flask`
+Blueprints support the ``errorhandler`` decorator just like the :class:`Flask`
 application object, so it is easy to make Blueprint-specific custom error
 pages.
 
@@ -261,7 +260,7 @@ concerning handlers for 404 and 405 exceptions.  These errorhandlers are only
 invoked from an appropriate ``raise`` statement or a call to ``abort`` in another
 of the blueprint's view functions; they are not invoked by, e.g., an invalid URL
 access.  This is because the blueprint does not "own" a certain URL space, so
-the application instance has no way of knowing which blueprint errorhandler it
+the application instance has no way of knowing which blueprint error handler it
 should run if given an invalid URL.  If you would like to execute different
 handling strategies for these errors based on URL prefixes, they may be defined
 at the application level using the ``request`` proxy object::
@@ -274,4 +273,4 @@ at the application level using the ``request`` proxy object::
         else:
             return ex
 
-More information on error handling see :ref:`errorpages`.
+More information on error handling see :doc:`/patterns/errorpages`.
